@@ -4,7 +4,7 @@ import "net/http"
 
 func Router() {
 
-	http.HandleFunc("/", GetCheckout)
+	http.HandleFunc("/", Checkout)
 
 	http.ListenAndServe(":80", nil)
 }

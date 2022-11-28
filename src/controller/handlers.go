@@ -1,23 +1,43 @@
 package controller
 
 import (
-	"fmt"
+	"encoding/json"
+	"io"
 	"net/http"
+	"web-app/src/model"
+	"web-app/src/service"
 )
 
-func GetCheckout(w http.ResponseWriter, r *http.Request) {
+func Checkout(responseWriter http.ResponseWriter, r *http.Request) {
 
-	if r.Method != "POST" {
-		http.Error(w, "404 Only Post is available", http.StatusNotFound)
+	body, err := io.ReadAll(r.Body)
+
+	if err != nil {
+		http.Error(responseWriter, "I couldan't even simulate this error, congrats!! msg me please", http.StatusBadRequest)
 		return
 	}
 
-	error := r.ParseForm()
+	switch r.Method {
+	case http.MethodPost:
+		postCheckout(responseWriter, body)
 
-	if error != nil {
-		http.Error(w, "parse error", http.StatusInternalServerError)
+	default:
+		http.Error(responseWriter, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func postCheckout(responseWriter http.ResponseWriter, body []byte) {
+
+	var checkout model.Checkout
+
+	err := json.Unmarshal(body, &checkout)
+
+	if err != nil {
+		http.Error(responseWriter, "Ajusta esse payload ai meu compatriota, é um map de string to any, não é possível que vc ta errando,"+
+			"aceita literalmente qualquer coisa como valor.", http.StatusBadRequest)
 		return
 	}
 
-	fmt.Fprint(w, "Welcome to my website!")
+	service.SaveCheckout(checkout)
+
 }
