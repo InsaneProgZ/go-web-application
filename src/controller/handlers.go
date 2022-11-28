@@ -33,7 +33,7 @@ func postCheckout(responseWriter http.ResponseWriter, body []byte) {
 	err := json.Unmarshal(body, &checkout)
 
 	if err != nil {
-		http.Error(responseWriter, "Ajusta esse payload ai meu compatriota, é um map de string to any, não é possível que vc ta errando,"+
+		http.Error(responseWriter, "Ajusta esse payload ai meu compatriota, é um map de string to any, não é possível que vc ta errando."+
 			"aceita literalmente qualquer coisa como valor.", http.StatusBadRequest)
 		return
 	}
